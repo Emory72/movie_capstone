@@ -1,19 +1,9 @@
 import React from "react";
-
-import { useQuery } from "@tanstack/react-query";
-import { getMovieShowtimes } from "../../../apis/cinemaAPI";
 import Logo from "./Logo";
 import Address from "./Address";
 import CinemaShowTimes from "./CinemaShowTimes";
 
-export default function Cinema({ movieID }) {
-  const { data = {}, isLoading } = useQuery({
-    queryKey: ["movieShowtimes", movieID],
-    queryFn: () => getMovieShowtimes(movieID),
-    enabled: !!movieID,
-  });
-  console.log(data);
-  const cinemaSystems = data.heThongRapChieu || [];
+export default function Cinema() {
   return (
     <div className="container py-5">
       <h1>Cinema</h1>
