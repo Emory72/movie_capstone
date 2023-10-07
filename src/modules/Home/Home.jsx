@@ -2,6 +2,7 @@ import React from "react";
 import Banner from "./Banner";
 import Cinema from "./Cinema";
 import Showing from "./Showing";
+import Footer from "../../components/Footer/Footer";
 
 export default function Home() {
   return (
@@ -9,6 +10,7 @@ export default function Home() {
       <Banner />
       <Showing />
       <Cinema />
+      <Footer />
     </div>
   );
 }

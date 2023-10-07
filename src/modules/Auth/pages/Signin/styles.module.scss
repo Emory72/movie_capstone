@@ -1,8 +1,5 @@
-body {
-  padding: 0;
-  margin: 0;
-  font-family: montserrat;
-  background-image: url(../../../../../public/backgroundSign.jpg);
+.body {
+  background-color: #fb4126;
 }
 
 .container {
@@ -15,6 +12,7 @@ body {
   width: 500px;
   background: white;
   border-radius: 5px;
+  background-image: url(../../../../../public/backgroundSign.jpg);
 
   .center {
     margin: 32px 0;
@@ -22,6 +20,7 @@ body {
     align-items: center;
     display: flex;
     flex-direction: column;
+
     .userIcon {
       font-size: 60px;
       color: #fb4126;
@@ -32,6 +31,7 @@ body {
       text-align: center;
       padding: 0 0 20px 0;
       font-weight: 700;
+      color: white;
     }
 
     .input {
@@ -66,6 +66,6 @@ body {
   .backtoSign {
     font-size: 20px;
     font-weight: bold;
-    color: rgb(111, 2, 111);
+    color: #ed9589;
   }
 }
