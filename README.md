@@ -28,6 +28,7 @@ root.render(
 3. npm i dayjs dùng để format lại ngày tháng đẹp hơn 
 
 4. npm install react-hook-form tiện cho việc validation form sign-in/sign-up
+5. npm i sass -D Để giảm kích thước trang web tải xuống vì đã loại bỏ trong dependencies
 
 
 #Cấu trúc Project 

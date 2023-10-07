@@ -7,16 +7,14 @@ export default function Logo({ systemID }) {
     queryKey: ["getMovieSystem", systemID],
     queryFn: getMovieSystem,
   });
- const handleShowAdress = (data)=>{
-
- }
+  const handleShowAdress = (data) => {};
 
   return (
     <div>
       <h1>Logo</h1>
       {/* <button onClick={()=>handleShowAdress()} key={{cinema.maHeThongRap}}> */}
 
-      </button>
+      {/* </button> */}
       {data.map((system) => {
         return (
           <img

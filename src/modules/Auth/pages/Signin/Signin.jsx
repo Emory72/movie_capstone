@@ -6,6 +6,9 @@ import { object, string } from "yup";
 import { signin } from "../../../../apis/userAPI";
 import { Navigate, useSearchParams } from "react-router-dom";
 import { useUserContext } from "../../../../contexts/UserContext/UserContext";
+import scss from "./styles.module.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
 
 const signinSchema = object({
   taiKhoan: string().required("Tài khoản không được để trống"),
@@ -66,33 +69,50 @@ export default function Signin() {
   //     return <Navigate to="/404" />;
   //   }
 
+  const handleBackToSignup = () => {
+    return <Navigate to="/sign-up" />;
+  };
+
   return (
-    <div>
-      <h1>Sign In</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <input placeholder="Tài Khoản" {...register("taiKhoan")} />
-          {errors.taiKhoan && (
-            <p className="text-danger">{errors.taiKhoan.message}</p>
-          )}
-        </div>
+    <div className={scss.container}>
+      <div className={scss.center}>
+        <FontAwesomeIcon icon={faCircleUser} className={scss.userIcon} />
+        <h4 className={scss.h4}>Đăng Nhập</h4>
+        <form className={scss.form} onSubmit={handleSubmit(onSubmit)}>
+          <div>
+            <input
+              className={scss.input}
+              placeholder="Tài Khoản*"
+              {...register("taiKhoan")}
+            />
+            {errors.taiKhoan && (
+              <p className="text-danger">{errors.taiKhoan.message}</p>
+            )}
+          </div>
 
-        <div>
-          <input
-            type="password"
-            placeholder="Mật Khẩu"
-            {...register("matKhau")}
-          />
-          {errors.matKhau && (
-            <p className="text-danger">{errors.matKhau.message}</p>
-          )}
-        </div>
+          <div>
+            <input
+              className={scss.input}
+              type="password"
+              placeholder="Mật Khẩu*"
+              {...register("matKhau")}
+            />
+            {errors.matKhau && (
+              <p className="text-danger">{errors.matKhau.message}</p>
+            )}
+          </div>
 
-        <button type="submit" disabled={isLoading}>
-          Đăng Nhập{" "}
-        </button>
-        {error && <p className="text-danger">{error}</p>}
-      </form>
+          <button className={scss.button} type="submit" disabled={isLoading}>
+            Đăng Nhập{" "}
+          </button>
+          {error && <p className="text-danger">{error}</p>}
+        </form>
+        <div>
+          <a className={scss.backtoSign} href="/sign-up">
+            Bạn chưa có tài khoản? Đăng ký
+          </a>
+        </div>
+      </div>
     </div>
   );
 }

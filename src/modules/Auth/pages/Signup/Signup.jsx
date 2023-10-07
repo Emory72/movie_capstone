@@ -5,6 +5,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { number, object, string } from "yup";
 import { signup } from "../../../../apis/userAPI";
 import { useNavigate } from "react-router-dom";
+import scss from "../Signin/styles.module.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
 
 const signupSchema = object({
   taiKhoan: string().required("Tài khoản không được để trống"),
@@ -62,50 +65,77 @@ export default function Signup() {
   };
 
   return (
-    <div>
-      <h1>Sign Up</h1>
+    <div className={scss.container}>
+      <div className={scss.center}>
+        <FontAwesomeIcon icon={faCircleUser} className={scss.userIcon} />
+        <h4 className={scss.h4}>Đăng Ký</h4>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          {/* tác dụng của hàm giúp input biết nó đc quản lý bới 1 giá trị và tự động cập nhật khi có thay đổi  */}
-          <input placeholder="Tài Khoản " {...register("taiKhoan")} />
-          {errors.taiKhoan && (
-            <p className="text-danger">{errors.taiKhoan.message}</p>
-          )}
-        </div>
-        <div>
-          <input
-            type="password"
-            placeholder="Mật Khẩu"
-            {...register("matKhau")}
-          />
-          {errors.matKhau && (
-            <p className="text-danger">{errors.matKhau.message}</p>
-          )}
-        </div>
-        <div>
-          <input placeholder="Email" {...register("email")} />
-          {errors.email && (
-            <p className="text-danger">{errors.email.message}</p>
-          )}
-        </div>
-        <div>
-          <input placeholder="Họ tên " {...register("hoTen")} />
-          {errors.hoTen && (
-            <p className="text-danger">{errors.hoTen.message}</p>
-          )}
-        </div>
-        <div>
-          <input placeholder="Số Điện Thoại " {...register("soDt")} />
-          {errors.soDt && <p className="text-danger">{errors.soDt.message}</p>}
-        </div>
+        <form className={scss.form} onSubmit={handleSubmit(onSubmit)}>
+          <div>
+            {/* tác dụng của hàm giúp input biết nó đc quản lý bới 1 giá trị và tự động cập nhật khi có thay đổi  */}
+            <input
+              className={scss.input}
+              placeholder="Tài Khoản "
+              {...register("taiKhoan")}
+            />
+            {errors.taiKhoan && (
+              <p className="text-danger">{errors.taiKhoan.message}</p>
+            )}
+          </div>
+          <div>
+            <input
+              className={scss.input}
+              type="password"
+              placeholder="Mật Khẩu"
+              {...register("matKhau")}
+            />
+            {errors.matKhau && (
+              <p className="text-danger">{errors.matKhau.message}</p>
+            )}
+          </div>
+          <div>
+            <input
+              className={scss.input}
+              placeholder="Email"
+              {...register("email")}
+            />
+            {errors.email && (
+              <p className="text-danger">{errors.email.message}</p>
+            )}
+          </div>
+          <div>
+            <input
+              className={scss.input}
+              placeholder="Họ tên "
+              {...register("hoTen")}
+            />
+            {errors.hoTen && (
+              <p className="text-danger">{errors.hoTen.message}</p>
+            )}
+          </div>
+          <div>
+            <input
+              className={scss.input}
+              placeholder="Số Điện Thoại "
+              {...register("soDt")}
+            />
+            {errors.soDt && (
+              <p className="text-danger">{errors.soDt.message}</p>
+            )}
+          </div>
 
-        <button type="submit" disabled={isLoading}>
-          Đăng Ký
-        </button>
-        {/* Error này là mutation là server trả về, errors ở trên là lỗi validation cua input  */}
-        {error && <p>{error}</p>}
-      </form>
+          <button className={scss.button} type="submit" disabled={isLoading}>
+            Đăng Ký
+          </button>
+          {/* Error này là mutation là server trả về, errors ở trên là lỗi validation cua input  */}
+          {error && <p>{error}</p>}
+        </form>
+        <div>
+          <a className={scss.backtoSign} href="/sign-in">
+            Bạn đã có tài khoản? Đăng nhập
+          </a>
+        </div>
+      </div>
     </div>
   );
 }

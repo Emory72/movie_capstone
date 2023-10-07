@@ -1,0 +1,71 @@
+body {
+  padding: 0;
+  margin: 0;
+  font-family: montserrat;
+  background-image: url(../../../../../public/backgroundSign.jpg);
+}
+
+.container {
+  margin-top: 30px;
+  padding: 0 24px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  background: white;
+  border-radius: 5px;
+
+  .center {
+    margin: 32px 0;
+    padding: 16px 0;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    .userIcon {
+      font-size: 60px;
+      color: #fb4126;
+      padding-bottom: 5px;
+    }
+
+    .h4 {
+      text-align: center;
+      padding: 0 0 20px 0;
+      font-weight: 700;
+    }
+
+    .input {
+      width: 450px;
+      padding: 10px 5px;
+      height: 70px;
+      font-size: 16px;
+      border: 2px solid silver;
+      border-radius: 5px;
+      margin-top: 16px;
+      margin-bottom: 8px;
+      font-size: 20px;
+    }
+    .input:hover {
+      border: 2px solid black;
+    }
+
+    .button {
+      width: 450px;
+      padding: 20px 5px;
+      margin: 20px 0;
+      height: 60px;
+      font-size: 16px;
+      background-color: #fb4126;
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+    }
+  }
+  .backtoSign {
+    font-size: 20px;
+    font-weight: bold;
+    color: rgb(111, 2, 111);
+  }
+}
