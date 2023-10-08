@@ -14,13 +14,25 @@ export async function getMovieShowtimes(movieID) {
   }
 }
 
-export async function getMovieSystem(systemID) {
+export async function getMovieSystem() {
   try {
-    const response = await fetcher.get("/api/QuanLyRap/LayThongTinHeThongRap", {
-      params: {
-        maHeThongRap: systemID,
-      },
-    });
+    const response = await fetcher.get("/QuanLyRap/LayThongTinHeThongRap", {});
+    return response.data.content;
+  } catch (error) {
+    throw error.response.data.content;
+  }
+}
+
+export async function getMovieAddress(systemID) {
+  try {
+    const response = await fetcher.get(
+      "/QuanLyRap/LayThongTinCumRapTheoHeThong",
+      {
+        params: {
+          maHeThongRap: systemID,
+        },
+      }
+    );
     return response.data.content;
   } catch (error) {
     throw error.response.data.content;

@@ -1,25 +1,22 @@
-import React, { useState } from "react";
+import React from "react";
 import { getMovieSystem } from "../../../apis/cinemaAPI";
 import { useQuery } from "@tanstack/react-query";
 
-export default function Logo({ systemID }) {
+export default function Logo() {
   const { data = [], isLoading } = useQuery({
-    queryKey: ["getMovieSystem", systemID],
+    queryKey: ["getMovieSystem"],
     queryFn: getMovieSystem,
+    refetchOnWindowFocus: false,
   });
-  const handleShowAdress = (data) => {};
 
   return (
-    <div>
-      <h1>Logo</h1>
-      {/* <button onClick={()=>handleShowAdress()} key={{cinema.maHeThongRap}}> */}
-
-      {/* </button> */}
+    <div className="">
       {data.map((system) => {
         return (
           <img
             key={system.maHeThongRap}
-            height={500}
+            width={50}
+            height={50}
             src={system.logo}
             alt=""
           />

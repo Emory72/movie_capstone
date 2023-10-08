@@ -1,5 +1,5 @@
 import React from "react";
 
-export default function Address() {
-  return <div>Address</div>;
+export default function Address({ data }) {
+  return <div>{data.maCumRap}</div>;
 }

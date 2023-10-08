@@ -35,47 +35,56 @@ export default function Showtimes({ movieID }) {
 
   const navigate = useNavigate();
   return (
-    <div>
-      {/*  render hệ thống rap  */}
-      {cinemaSystems.map((cinemaSystem) => {
-        return (
-          <div key={cinemaSystem.maHeThongRap}>
-            <img
-              src={cinemaSystem.logo}
-              alt=""
-              width={50}
-              height={50}
-              onClick={() => handleGetCinemaSystem(cinemaSystem.maHeThongRap)}
-            />
-          </div>
-        );
-      })}
+    <div className="container py-5">
+      <div className="row">
+        <div className="">
+          {/*  render hệ thống rap  */}
+          {cinemaSystems.map((cinemaSystem) => {
+            return (
+              <div key={cinemaSystem.maHeThongRap}>
+                <img
+                  src={cinemaSystem.logo}
+                  alt=""
+                  width={50}
+                  height={50}
+                  onClick={() =>
+                    handleGetCinemaSystem(cinemaSystem.maHeThongRap)
+                  }
+                />
+              </div>
+            );
+          })}
+        </div>
+        <div className="">
+          .col-md-8
+          {/* render danh sách rạp  */}
+          {cinemas.map((cinema) => {
+            return (
+              <div>
+                <h3>{cinema.tenCumRap}</h3>
+                {/* render lich chieu */}
+                {cinema.lichChieuPhim.map((showtime) => {
+                  // const date = new Date(showtime.ngayChieuGioChieu);
+                  // const time = `${date.getDay()}-${date.getMonth()}-${date.getFullYear()}~${date.getHours()}:${date.getMinutes()}`;
+                  const time = dayjs(showtime.ngayChieuGioChieu).format(
+                    "DD-MM-YYYY ~ HH:mm"
+                  );
 
-      {/* render danh sách rạp  */}
-
-      {cinemas.map((cinema) => {
-        return (
-          <div>
-            <h3>{cinema.tenCumRap}</h3>
-            {/* render lich chieu */}
-            {cinema.lichChieuPhim.map((showtime) => {
-              // const date = new Date(showtime.ngayChieuGioChieu);
-              // const time = `${date.getDay()}-${date.getMonth()}-${date.getFullYear()}~${date.getHours()}:${date.getMinutes()}`;
-              const time = dayjs(showtime.ngayChieuGioChieu).format(
-                "DD-MM-YYYY ~ HH:mm"
-              );
-
-              return (
-                <button
-                  onClick={() => navigate(`/ticket/${showtime.maLichChieu}`)}
-                >
-                  {time}
-                </button>
-              );
-            })}
-          </div>
-        );
-      })}
+                  return (
+                    <button
+                      onClick={() =>
+                        navigate(`/ticket/${showtime.maLichChieu}`)
+                      }
+                    >
+                      {time}
+                    </button>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
