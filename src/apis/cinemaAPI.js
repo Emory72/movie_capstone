@@ -13,7 +13,7 @@ export async function getMovieShowtimes(movieID) {
     throw error.response.data.content;
   }
 }
-
+//第一个API
 export async function getMovieSystem() {
   try {
     const response = await fetcher.get("/QuanLyRap/LayThongTinHeThongRap", {});

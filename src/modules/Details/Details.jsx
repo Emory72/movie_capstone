@@ -7,7 +7,6 @@ export default function Details() {
   const { movieID } = useParams();
   return (
     <div>
-      <MovieProfile movieID={movieID} />
       <Showtimes movieID={movieID} />
     </div>
   );

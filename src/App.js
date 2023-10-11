@@ -22,7 +22,7 @@ function App() {
               path="ticket/:showtimeID"
               element={
                 <ProtectedRoute>
-                  <div>Ticket Page</div>
+                  <Ticket />
                 </ProtectedRoute>
               }
             />
