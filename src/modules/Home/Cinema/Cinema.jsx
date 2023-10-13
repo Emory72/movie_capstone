@@ -4,13 +4,15 @@ import Address from "./Address";
 import CinemaShowTimes from "./CinemaShowTimes";
 // Set up MUI Atb vertical
 import PropTypes from "prop-types";
-import { Tabs, Tab, Typography, Box } from "@mui/material";
+import { Tabs, Tab, Typography, Box, TabList } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 
 //Set up Logo
 import { getMovieSystem } from "../../../apis/cinemaAPI";
 //set up Address
 import { getMovieAddress } from "../../../apis/cinemaAPI";
+//set up movie Details
+import { getMovieDetails } from "../../../apis/cinemaAPI";
 
 //function of MUI  Tab vertical
 function TabPanel(props) {
@@ -25,7 +27,7 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 7 }}>
+        <Box sx={{ p: 3 }}>
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -60,7 +62,6 @@ export default function Cinema() {
   });
 
   const [systemID, setSystemID] = useState([]);
-
   const handleGetAddress = (systemID) => {
     setSystemID(systemID);
   };
@@ -74,8 +75,24 @@ export default function Cinema() {
   });
   console.log(addressData);
 
+  //useQuery to fetcher data for movie times data
+  const { data: movieDetailsData } = useQuery({
+    queryKey: ["MovieDetails", systemID],
+    queryFn: () => getMovieDetails(systemID),
+    refetchOnWindowFocus: false,
+  });
+  console.log(movieDetailsData);
+
+  // const [theaterID, setTheaterID] = useState([]);
+  // // const theaterSystems = movieDetailsData?.lstCumRap || [];
+
+  // const handleGetDetails = () => {
+  //   const found = logoData?.find((item) => item.maHeThongRap === systemID);
+  //   console.log(found);
+  // };
+
   return (
-    <div className="container   my-5">
+    <div className="container my-5">
       <Box
         sx={{
           flexGrow: 1,
@@ -95,7 +112,6 @@ export default function Cinema() {
         >
           {logoData?.map((system, index) => (
             <Tab
-              // className="me-5 border"
               key={system.maHeThongRap}
               {...a11yProps(index)}
               label={
@@ -115,17 +131,30 @@ export default function Cinema() {
 
         {addressData?.map((cinemas, index) => (
           <TabPanel value={value} index={index}>
-            <Tab
-              label={
-                <div className="text-align-start">
-                  <h5>{cinemas.tenCumRap}</h5>
-                  <p>{cinemas.diaChi}</p>
-                  <a href="/" className="text-danger">
-                    [Chi Tiết]
-                  </a>
-                </div>
-              }
-            />
+            <Tabs
+              orientation="vertical"
+              variant="scrollable"
+              value={value}
+              onChange={handleChange}
+              aria-label="Vertical tabs example"
+              sx={{ borderRight: 1, borderColor: "divider" }}
+            >
+              {addressData?.map((cinemas, index) => (
+                <Tab
+                  // onClick={() => handleGetDetails()}
+                  key={cinemas.maCumRap}
+                  label={
+                    <div className="text-align-start">
+                      <h5 className="text-success">{cinemas.tenCumRap}</h5>
+                      <p>{cinemas.diaChi}</p>
+                      <a href="/" className="text-danger">
+                        [Chi Tiết]
+                      </a>
+                    </div>
+                  }
+                />
+              ))}
+            </Tabs>
           </TabPanel>
         ))}
       </Box>

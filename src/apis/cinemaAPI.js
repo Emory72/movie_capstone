@@ -38,3 +38,20 @@ export async function getMovieAddress(systemID) {
     throw error.response.data.content;
   }
 }
+
+export async function getMovieDetails({ systemID }) {
+  try {
+    const response = await fetcher.get(
+      "/QuanLyRap/LayThongTinLichChieuHeThongRap",
+      {
+        params: {
+          maHeThongRap: systemID,
+          maNhom: "GP13",
+        },
+      }
+    );
+    return response.data.content;
+  } catch (error) {
+    throw error.response.data.content;
+  }
+}

@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Navigate, Route, Outlet } from "react-router-dom";
 
 export default function AdminLayout() {
   return (

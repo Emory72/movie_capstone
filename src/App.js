@@ -10,6 +10,7 @@ import UserProvider from "./contexts/UserContext/UserContext";
 import ProtectedRoute from "./routers/ProtectedRoute/ProtectedRoute";
 import AdminMovie from "./modules/AdminMovie/AdminMovie";
 import AdminLayout from "./layouts/AdminLayout/AdminLayout";
+import AdminProtectedRoute from "./routers/AdminProtectedRoute/AdminProtectedRoute";
 function App() {
   return (
     <UserProvider>
@@ -32,11 +33,12 @@ function App() {
           </Route>
 
           {/* Admin  */}
-          {/* <Route element={<AdminProtectedRoute/>}/> */}
-          <Route path="/admin">
-            <Route path="movies" element={<AdminMovie />}></Route>
-            {/* <Route path="users" element={<AdminUser />}></Route>
-            <Route path="tickets" element={<AdminTicket />}></Route> */}
+          <Route path="/" element={<AdminProtectedRoute />}>
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route path="movies" element={<AdminMovie />}></Route>
+              {/* <Route path="users" element={<AdminUser />}></Route> */}
+              {/* <Route path="tickets" element={<AdminTicket />}></Route> */}
+            </Route>
           </Route>
 
           <Route path="*" element={<NotFound />} />

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { useUserContext } from "../../contexts/UserContext/UserContext";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 // Mục đích: kiểm tra user đã đăng nhập và phòng tránh ng ngoài biết dc url và nhập chính xác vào => đẩy user về trang đăng nhập
