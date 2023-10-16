@@ -65,9 +65,9 @@ export default function Signin() {
     return <Navigate to={redirectTo || "/"} replace />;
   }
   // Nếu có làm trang admin thì chú ý thêm điều kiện phân loại người dùng như sau, chỉ có quản trị mới dc quyền đăng nhập, user bị đẩy về trang 404
-  //   if (currentUser.maLoaiNguoiDung !== "QuanTri") {
-  //     return <Navigate to="/404" />;
-  //   }
+  // if (currentUser.maLoaiNguoiDung !== "QuanTri") {
+  //   return <Navigate to="/404" />;
+  // }
 
   const handleBackToSignup = () => {
     return <Navigate to="/sign-up" />;

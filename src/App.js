@@ -11,6 +11,8 @@ import ProtectedRoute from "./routers/ProtectedRoute/ProtectedRoute";
 import AdminMovie from "./modules/AdminMovie/AdminMovie";
 import AdminLayout from "./layouts/AdminLayout/AdminLayout";
 import AdminProtectedRoute from "./routers/AdminProtectedRoute/AdminProtectedRoute";
+import UserList from "./modules/AdminUser/UserList/UserList";
+import AddUser from "./modules/AdminUser/AddUser/AddUser";
 function App() {
   return (
     <UserProvider>
@@ -27,19 +29,19 @@ function App() {
                 </ProtectedRoute>
               }
             />
-
+            {/* Public routes */}
             <Route path="/sign-in" element={<Signin />} />
             <Route path="/sign-up" element={<Signup />} />
           </Route>
 
-          {/* Admin  */}
-          <Route path="/" element={<AdminProtectedRoute />}>
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route path="movies" element={<AdminMovie />}></Route>
-              {/* <Route path="users" element={<AdminUser />}></Route> */}
-              {/* <Route path="tickets" element={<AdminTicket />}></Route> */}
-            </Route>
+          {/* Admin Routes need protected */}
+          {/* <Route path="/" element={<AdminProtectedRoute />}> */}
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route path="movies" element={<AdminMovie />}></Route>
+            <Route path="users" element={<UserList />}></Route>
+            <Route path="addUser" element={<AddUser />}></Route>
           </Route>
+          {/* </Route> */}
 
           <Route path="*" element={<NotFound />} />
         </Routes>

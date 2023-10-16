@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Logo from "./Logo";
-import Address from "./Address";
-import CinemaShowTimes from "./CinemaShowTimes";
+
 // Set up MUI Atb vertical
 import PropTypes from "prop-types";
 import { Tabs, Tab, Typography, Box, TabList } from "@mui/material";
@@ -11,7 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getMovieSystem } from "../../../apis/cinemaAPI";
 //set up Address
 import { getMovieAddress } from "../../../apis/cinemaAPI";
-//set up movie Details
+//set up movieDetails
 import { getMovieDetails } from "../../../apis/cinemaAPI";
 
 //function of MUI  Tab vertical
@@ -27,7 +25,7 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box>
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -74,22 +72,25 @@ export default function Cinema() {
     refetchOnWindowFocus: false,
   });
   console.log(addressData);
-
-  //useQuery to fetcher data for movie times data
+  //useQuery to fetcher data for movie details data
   const { data: movieDetailsData } = useQuery({
-    queryKey: ["MovieDetails", systemID],
-    queryFn: () => getMovieDetails(systemID),
+    queryKey: ["MovieDetails"],
+    queryFn: getMovieDetails,
     refetchOnWindowFocus: false,
   });
   console.log(movieDetailsData);
+  const [theaterID, setTheaterID] = useState([]);
 
-  // const [theaterID, setTheaterID] = useState([]);
-  // // const theaterSystems = movieDetailsData?.lstCumRap || [];
+  const theaterSystem = movieDetailsData?.lstCumRap || [];
+  const handleGetDetails = (theaterID) => {
+    const found = theaterSystem.find((item) => item.maCumRap == theaterID);
 
-  // const handleGetDetails = () => {
-  //   const found = logoData?.find((item) => item.maHeThongRap === systemID);
-  //   console.log(found);
-  // };
+    // const onplayMovies = movieDetailsData?.filter((movie) => {
+    //   return movie.dangChieu === true;
+    // });
+    setTheaterID(found);
+  };
+  console.log(theaterSystem);
 
   return (
     <div className="container my-5">
@@ -102,6 +103,7 @@ export default function Cinema() {
           borderRadius: 5,
         }}
       >
+        {/* Tabs 1 cho cột Logo */}
         <Tabs
           orientation="vertical"
           variant="scrollable"
@@ -117,7 +119,7 @@ export default function Cinema() {
               label={
                 <div onClick={() => handleGetAddress(system.maHeThongRap)}>
                   <img
-                    className="my-1"
+                    className="my-1 p-2"
                     width={100}
                     height={100}
                     src={system.logo}
@@ -130,18 +132,17 @@ export default function Cinema() {
         </Tabs>
 
         {addressData?.map((cinemas, index) => (
-          <TabPanel value={value} index={index}>
+          <TabPanel className="overflow-scroll" value={value} index={index}>
+            {/* Tab */}
             <Tabs
               orientation="vertical"
-              variant="scrollable"
               value={value}
               onChange={handleChange}
               aria-label="Vertical tabs example"
-              sx={{ borderRight: 1, borderColor: "divider" }}
             >
               {addressData?.map((cinemas, index) => (
                 <Tab
-                  // onClick={() => handleGetDetails()}
+                  onClick={() => handleGetDetails(cinemas.maCumRap)}
                   key={cinemas.maCumRap}
                   label={
                     <div className="text-align-start">
@@ -155,6 +156,22 @@ export default function Cinema() {
                 />
               ))}
             </Tabs>
+
+            {movieDetailsData.lstCumRap?.map((movies, index) => {
+              <TabPanel className="overflow-scroll" value={value} index={index}>
+                {movies.danhSachPhim.map((movie) => {
+                  <div className="row">
+                    <div className="col-2">
+                      <img src={movies.hinhAnh} alt="" />
+                    </div>
+                    <div className="col">
+                      <button>C18</button>
+                      <span>{movies.tenPhim}</span>
+                    </div>
+                  </div>;
+                })}
+              </TabPanel>;
+            })}
           </TabPanel>
         ))}
       </Box>
