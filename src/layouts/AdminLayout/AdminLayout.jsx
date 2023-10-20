@@ -1,7 +1,6 @@
 import React from "react";
-import { Navigate, Route, Outlet } from "react-router-dom";
+import { useNavigate, Route, Outlet } from "react-router-dom";
 import { useUserContext } from "../../contexts/UserContext/UserContext";
-
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import AppBar from "@mui/material/AppBar";
@@ -23,8 +22,12 @@ import VideoSettingsRoundedIcon from "@mui/icons-material/VideoSettingsRounded";
 const drawerWidth = 240;
 
 export default function AdminLayout() {
-  const { handleSignout } = useUserContext();
-
+  const navigate = useNavigate();
+  const handleSignout = () => {
+    localStorage.removeItem("user");
+    navigate("/");
+  };
+  // const { handleSignout } = useUserContext();
   const [openUser, setOpenUser] = React.useState(true);
   const [openMovie, setOpenMovie] = React.useState(true);
 
@@ -94,10 +97,10 @@ export default function AdminLayout() {
             </ListItemButton>
             <Collapse in={openUser} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                <ListItemButton href="users" sx={{ pl: 4 }}>
+                <ListItemButton href="/admin/users" sx={{ pl: 4 }}>
                   <ListItemText primary="Danh Sách User" />
                 </ListItemButton>
-                <ListItemButton href="addUser" sx={{ pl: 4 }}>
+                <ListItemButton href="/admin/addUser" sx={{ pl: 4 }}>
                   <ListItemText primary="Thêm User" />
                 </ListItemButton>
               </List>
@@ -112,10 +115,10 @@ export default function AdminLayout() {
             </ListItemButton>
             <Collapse in={openMovie} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                <ListItemButton sx={{ pl: 4 }}>
+                <ListItemButton href="/admin/movies" sx={{ pl: 4 }}>
                   <ListItemText primary="Danh Sách Phim" />
                 </ListItemButton>
-                <ListItemButton sx={{ pl: 4 }}>
+                <ListItemButton href="/admin/addMovie" sx={{ pl: 4 }}>
                   <ListItemText primary="Thêm Phim" />
                 </ListItemButton>
               </List>

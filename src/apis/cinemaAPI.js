@@ -39,13 +39,12 @@ export async function getMovieAddress(systemID) {
   }
 }
 
-export async function getMovieDetails({ systemID }) {
+export async function getMovieDetails() {
   try {
     const response = await fetcher.get(
       "/QuanLyRap/LayThongTinLichChieuHeThongRap",
       {
         params: {
-          maHeThongRap: systemID,
           maNhom: "GP13",
         },
       }

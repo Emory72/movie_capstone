@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-
+import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
 // Set up MUI Atb vertical
 import PropTypes from "prop-types";
 import { Tabs, Tab, Typography, Box, TabList } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-
+import { Navigate } from "react-router-dom";
 //Set up Logo
 import { getMovieSystem } from "../../../apis/cinemaAPI";
 //set up Address
@@ -47,6 +48,7 @@ function a11yProps(index) {
 }
 
 export default function Cinema() {
+  const navigate = useNavigate();
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -60,38 +62,64 @@ export default function Cinema() {
   });
 
   const [systemID, setSystemID] = useState([]);
+
   const handleGetAddress = (systemID) => {
     setSystemID(systemID);
   };
 
+  console.log(systemID);
   //useQuery to fetcher data for movie address data
-  const { data: addressData } = useQuery({
+  const { data: addressData = [] } = useQuery({
     queryKey: ["MovieAddress", systemID],
     queryFn: () => getMovieAddress(systemID),
     enabled: !!systemID,
     refetchOnWindowFocus: false,
   });
+
   console.log(addressData);
+
   //useQuery to fetcher data for movie details data
-  const { data: movieDetailsData } = useQuery({
-    queryKey: ["MovieDetails"],
-    queryFn: getMovieDetails,
-    refetchOnWindowFocus: false,
-  });
-  console.log(movieDetailsData);
-  const [theaterID, setTheaterID] = useState([]);
+  // const { data: movieDetailsData } = useQuery({
+  //   queryKey: ["MovieDetails"],
+  //   queryFn: getMovieDetails,
+  //   refetchOnWindowFocus: false,
+  // });
+  // console.log(movieDetailsData);
 
-  const theaterSystem = movieDetailsData?.lstCumRap || [];
-  const handleGetDetails = (theaterID) => {
-    const found = theaterSystem.find((item) => item.maCumRap == theaterID);
+  useEffect(() => {
+    if (logoData.length > 0) {
+      handleGetAddress(logoData[0].maHeThongRap);
+    }
+  }, [logoData]);
 
-    // const onplayMovies = movieDetailsData?.filter((movie) => {
-    //   return movie.dangChieu === true;
-    // });
-    setTheaterID(found);
+  const [movieDetailsData, setMovieDetailsData] = useState([]);
+  const [selectedTenCumRap, setSelectedTenCumRap] = useState(0);
+  const handleGetDetails = async (infoTheaterId, tenCumRap) => {
+    try {
+      const movieDetailsData = await getMovieDetails(infoTheaterId);
+      setMovieDetailsData(movieDetailsData);
+      setSelectedTenCumRap(tenCumRap);
+    } catch (error) {
+      console.log(error);
+    }
   };
-  console.log(theaterSystem);
 
+  // if (!movieDetailsData) {
+  //   return;
+  // }
+
+  // const filterMovies = movieDetailsData.lstCumRap.danhSachPhim.filter(
+  //   (movie) => {
+  //     return movie.dangChieu === true;
+  //   }
+  // );
+  // console.log(filterMovies);
+
+  // useEffect(() => {
+  //   if (addressData.length > 0) {
+  //     handleGetDetails(addressData[0].tenCumRap);
+  //   }
+  // });
   return (
     <div className="container my-5">
       <Box
@@ -131,7 +159,8 @@ export default function Cinema() {
           ))}
         </Tabs>
 
-        {addressData?.map((cinemas, index) => (
+        {addressData?.map((data, index) => (
+          // phan map nay a chua hieu lam
           <TabPanel className="overflow-scroll" value={value} index={index}>
             {/* Tab */}
             <Tabs
@@ -146,8 +175,8 @@ export default function Cinema() {
                   key={cinemas.maCumRap}
                   label={
                     <div className="text-align-start">
-                      <h5 className="text-success">{cinemas.tenCumRap}</h5>
-                      <p>{cinemas.diaChi}</p>
+                      <h5 className="text-success">{cinemas?.tenCumRap}</h5>
+                      <p>{cinemas?.diaChi}</p>
                       <a href="/" className="text-danger">
                         [Chi Tiết]
                       </a>
@@ -156,24 +185,37 @@ export default function Cinema() {
                 />
               ))}
             </Tabs>
-
-            {movieDetailsData.lstCumRap?.map((movies, index) => {
-              <TabPanel className="overflow-scroll" value={value} index={index}>
-                {movies.danhSachPhim.map((movie) => {
-                  <div className="row">
-                    <div className="col-2">
-                      <img src={movies.hinhAnh} alt="" />
-                    </div>
-                    <div className="col">
-                      <button>C18</button>
-                      <span>{movies.tenPhim}</span>
-                    </div>
-                  </div>;
-                })}
-              </TabPanel>;
-            })}
           </TabPanel>
         ))}
+        <Box sx={{ width: 1000 }} className="overflow-scroll">
+          {movieDetailsData?.map((detailData, index) =>
+            detailData.lstCumRap.map((data) =>
+              data.danhSachPhim.map((dt) => (
+                <div className="row py-3">
+                  <div className="col-2 mx-3 me-5">
+                    <img
+                      className="rounded"
+                      src={dt.hinhAnh}
+                      width={150}
+                      height={150}
+                    />
+                  </div>
+                  <div className="col ">
+                    <h4>{dt.tenPhim}</h4>
+                    {dt.lstLichChieuTheoPhim.map((d) => (
+                      <button
+                        onClick={() => navigate(`/ticket/${d.maLichChieu}`)}
+                        className="btn btn-light py-2 mx-2 my-2 border"
+                      >
+                        {dayjs(d.ngayChieuGioChieu).format("DD/MM/YYYY ~HH:mm")}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))
+            )
+          )}
+        </Box>
       </Box>
     </div>
   );

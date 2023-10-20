@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { useUserContext } from "../../contexts/UserContext/UserContext";
 import { useNavigate } from "react-router-dom";
 
@@ -15,19 +15,24 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import Avatar from "@mui/material/Avatar";
-import AdbIcon from "@mui/icons-material/Adb";
 
 export default function Header() {
   let content;
+  const navigate = useNavigate();
   const { currentUser, handleSignout } = useUserContext();
   // Khi bấm vào element id nào thì scroll xuống id đó
-  const handleSroll = (id) => {
-    const element = document.getElementById(id);
-    element.scrollIntoView({ behavior: "smooth" });
+  const pages = ["Lịch Chiếu", "Cụm Rạp ", "Tin Tức", "Ứng Dụng"];
+  const pageRefs = {};
+  const createRef = (page) => {
+    pageRefs[page] = React.createRef();
   };
 
-  const pages = ["Lịch Chiếu", "Cụm Rạp ", "Tin Tức", "Ứng Dụng"];
+  const handleScrollToPage = (page) => {
+    if (pageRefs[page] && pageRefs[page].current) {
+      pageRefs[page].current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   const settings = ["Thông tin cá nhân", "Quản Trị ", "Đăng Xuất "];
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -140,7 +145,7 @@ export default function Header() {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={() => handleScrollToPage(page)}
                 sx={{
                   my: 2,
                   color: "gray",
@@ -188,15 +193,17 @@ export default function Header() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {" "}
-                <MenuItem onClick={handleCloseUserMenu}>
+                <MenuItem onClick={() => navigate("/userInfo")}>
                   Thông tin cá nhân
                   <Typography textAlign="center"></Typography>
                 </MenuItem>
-                <MenuItem hidden onClick={handleCloseUserMenu}>
-                  Quản Trị
-                  <Typography textAlign="center"></Typography>
-                </MenuItem>
+                {currentUser.maLoaiNguoiDung === "QuanTri" && (
+                  <MenuItem onClick={() => navigate("/admin")}>
+                    Quản Trị
+                    <Typography textAlign="center"></Typography>
+                  </MenuItem>
+                )}
+
                 <MenuItem onClick={handleSignout}>
                   Đăng xuất
                   <Typography textAlign="center"></Typography>

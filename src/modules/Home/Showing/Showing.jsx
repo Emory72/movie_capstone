@@ -43,13 +43,23 @@ export default function Showing() {
                   height={600}
                   className="rounded"
                 />
-                <div className="fw-bold fs-5 py-2">
+                <div className="fw-bold fs-5 py-2 text-white">
                   <span className="bg-danger fw-bold text-white px-2 py-1 rounded me-3">
                     C18
                   </span>
                   {movie.tenPhim}
                 </div>
-                <div className="py-2 text-truncate fs-5">{movie.moTa}</div>
+                <div className="py-2 text-truncate fs-5 text-white  ">
+                  {movie.moTa}
+                </div>
+                <button
+                  onClick={() => navigate(`/movie/${movie.maPhim}`)}
+                  className="btn btn-danger mb-5 me-2"
+                  width={100}
+                  height={10}
+                >
+                  Mua Vé
+                </button>
               </div>
             </div>
           ))}

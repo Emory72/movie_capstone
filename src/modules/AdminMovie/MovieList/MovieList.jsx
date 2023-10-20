@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import fetcher from "../../../apis/fetcher";
-
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import { deleteMovie } from "../../../apis/movieAPI";
+import { editMovie, getMovie } from "../../../apis/movieAPI";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -12,51 +13,26 @@ import TableRow from "@mui/material/TableRow";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import IconButton from "@mui/material/IconButton";
 
-export default function UserList() {
+export default function MovieList() {
   // State quản lý danh sách người dùng từ API
-  const [users, setUsers] = useState([]);
+  const [movies, setMovies] = useState([]);
   //state quản lý người dùng đang được chọn
-  const [selectedUser, setSelectedUser] = useState(null);
-  const getUsers = async () => {
-    try {
-      const response = await fetcher.get(
-        "QuanLyNguoiDung/LayDanhSachNguoiDung"
-      );
-      setUsers(response.data?.content);
-    } catch (error) {
-      throw error.response.data?.content;
-    }
-  };
 
-  //Hàm nhận vào userID và tìm user tương ứng
-  const onSelectUser = async (userID) => {
-    try {
-      const response = await fetcher.get(
-        `QuanLyNguoiDung/LayDanhSachNguoiDung/${userID}`
-      );
-      setSelectedUser(response.data?.content);
-    } catch (error) {
-      console.error(error.response.data);
-    }
-  };
+  const queryClient = useQueryClient();
 
-  //Delete user
-
-  const handleDelete = async (userID) => {
-    try {
-      await fetcher.delete(`QuanLyNguoiDung/XoaNguoiDung/${userID}`);
-      //Xoá thành công
-      getUsers();
-    } catch (error) {
-      console.log(error.response.data);
-    }
-  };
-  //Callback của useEffect sẽ tự động được gọi sau khi component render lần đầu, ta dùng để gọi hàm getUsers
-  useEffect(() => {
-    getUsers();
-  }, []);
-
+  const {
+    data: listMovie = [],
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["posts"],
+    queryFn: getMovie,
+    refetchOnWindowFocus: false,
+  });
   //MUI table
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -110,14 +86,44 @@ export default function UserList() {
     },
   }));
 
+  //Delete movie post
+  const { mutate: handleDelete } = useMutation({
+    mutationFn: (movieID) => deleteMovie(movieID),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
+  });
+
+  const { mutate: handleEdit } = useMutation({
+    mutationFn: (movieID) => editMovie(movieID),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
+  });
+
+  const [search, setSearch] = useState("");
+  const [productData, setProductData] = useState(null);
+  useEffect(() => {
+    const timeOut = setTimeout(() => {
+      setProductData(search);
+    }, 300);
+    return () => clearTimeout(timeOut);
+  }, [search]);
+
+  console.log(listMovie);
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+  };
   return (
     <div className="px-5">
-      <h1 className="text-white mt-5 py-5">Danh Sách User</h1>
+      <h1 className="text-white mt-5 py-5">Danh Sách Phim </h1>
       <Search>
         <SearchIconWrapper>
           <SearchIcon />
         </SearchIconWrapper>
         <StyledInputBase
+          onChange={handleSearch}
+          value={search}
           placeholder="Search…"
           inputProps={{ "aria-label": "search" }}
         />
@@ -128,41 +134,63 @@ export default function UserList() {
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow sx={{ typography: "subtitle2" }}>
-                <TableCell>STT</TableCell>
-                <TableCell>Tài Khoản</TableCell>
-                <TableCell>Họ và Tên</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Số Điện Thoại</TableCell>
-                <TableCell>Mật Khẩu</TableCell>
-                <TableCell>Loại Người Dùng</TableCell>
+                <TableCell>Mã Phim </TableCell>
+                <TableCell>Tên Phim</TableCell>
+                <TableCell>Hình Ảnh </TableCell>
+                <TableCell>Mô Tả</TableCell>
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {users
+              {listMovie
+                .filter((item) => {
+                  return search.toLowerCase() === ""
+                    ? item
+                    : item.tenPhim.toLowerCase().includes(search);
+                })
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((user, index) => (
+                .map((movie) => (
                   <TableRow
                     hover
                     role="checkbox"
                     tabIndex={-1}
-                    key={user.taiKhoan}
+                    key={movie.maPhim}
                   >
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell>{user.taiKhoan}</TableCell>
-                    <TableCell>{user.hoTen}</TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>{user.soDT}</TableCell>
-                    <TableCell>{user.matKhau}</TableCell>
-                    <TableCell>{user.maLoaiNguoiDung}</TableCell>
+                    <TableCell>{movie.maPhim}</TableCell>
+                    <TableCell>{movie.tenPhim}</TableCell>
                     <TableCell>
-                      <button
-                        className="btn btn-success me-3"
-                        onClick={() => onSelectUser(user.index)}
+                      <div>
+                        <img
+                          className="rounded"
+                          width={150}
+                          height={150}
+                          src={movie.hinhAnh}
+                        />
+                      </div>
+                    </TableCell>
+                    <TableCell>{movie.moTa}</TableCell>
+                    <TableCell></TableCell>
+
+                    <TableCell
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        border: "none",
+                      }}
+                    >
+                      <IconButton
+                        onClick={() => handleEdit(movie.maPhim)}
+                        size="large"
                       >
-                        Edit
-                      </button>
-                      <button className="btn btn-danger">Delete</button>
+                        <EditIcon sx={{ marginRight: "5px" }} />
+                      </IconButton>
+                      <IconButton
+                        onClick={() => handleDelete(movie.maPhim)}
+                        aria-label="delete"
+                        size="large"
+                      >
+                        <DeleteIcon />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -172,7 +200,7 @@ export default function UserList() {
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
-          count={users.length}
+          count={movies.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

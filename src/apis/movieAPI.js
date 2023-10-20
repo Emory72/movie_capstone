@@ -38,10 +38,38 @@ export async function getMovieDetails(movieID) {
 
 export async function addMovie(movie) {
   try {
-    const response = await fetcher.post("/QuanLyPhim/LayThongTinPhim", movie);
+    const response = await fetcher.post(
+      "/QuanLyPhim/ThemPhimUploadHinh",
+      movie
+    );
 
-    return response.data.content;
+    return response.data?.content;
   } catch (error) {
-    throw error.response.data.content;
+    throw error.response.data?.content;
   }
 }
+
+export const deleteMovie = async (movieID) => {
+  try {
+    const response = await fetcher.delete("/QuanLyPhim/XoaPhim", {
+      params: {
+        MaPhim: movieID,
+      },
+    });
+    return response.data?.content;
+  } catch (error) {
+    throw error.response.data?.content;
+  }
+};
+
+export const editMovie = async (movieID) => {
+  try {
+    const response = await fetcher.post(
+      "/QuanLyPhim/CapNhatPhimUpload",
+      movieID
+    );
+    return response.data?.content;
+  } catch (error) {
+    throw error.response.data?.content;
+  }
+};
